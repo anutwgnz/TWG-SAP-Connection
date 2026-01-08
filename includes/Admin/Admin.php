@@ -77,10 +77,21 @@ class Admin {
         register_setting( 'sap_connection_settings_group', 'sap_password' );
         register_setting( 'sap_connection_settings_group', 'sap_host' );
         register_setting( 'sap_connection_settings_group', 'sap_port' );
+        register_setting( 'sap_connection_settings_group', 'product_codes_json_url' );
+        register_setting( 'sap_connection_settings_group', 'product_images_json_url' );
+        register_setting( 'sap_connection_settings_group', 'product_brand_json_url' );
+        register_setting( 'sap_connection_settings_group', 'product_type_json_url' );
+        register_setting( 'sap_connection_settings_group', 'product_sector_json_url' );
 
         add_settings_section(
             'sap_connection_main_section',
             'SAP Connection Settings',
+            null,
+            'sap-connection-settings'
+        );
+        add_settings_section(
+            'sap_connection_main_section',
+            'SAP Settings',
             null,
             'sap-connection-settings'
         );
@@ -125,6 +136,46 @@ class Admin {
             'Delete All Synced Products',
             [ $this, 'render_delete_products_button' ],
             'sap-delete-products',
+            'sap_connection_main_section'
+        );
+
+        add_settings_field(
+            'product_codes_json_url',
+            'Product Codes JSON URL',
+            [ $this, 'render_product_codes_field' ],
+            'sap-connection-settings',
+            'sap_connection_main_section'
+        );
+
+        add_settings_field(
+            'product_images_json_url',
+            'Product Images JSON URL',
+            [ $this, 'render_product_images_field' ],
+            'sap-connection-settings',
+            'sap_connection_main_section'
+        );
+
+        add_settings_field(
+            'product_brand_json_url',
+            'Product Brand JSON URL',
+            [ $this, 'render_product_brand_field' ],
+            'sap-connection-settings',
+            'sap_connection_main_section'
+        );
+
+        add_settings_field(
+            'product_type_json_url',
+            'Product Type JSON URL',
+            [ $this, 'render_product_type_field' ],
+            'sap-connection-settings',
+            'sap_connection_main_section'
+        );
+
+        add_settings_field(
+            'product_sector_json_url',
+            'Product Sector JSON URL',
+            [ $this, 'render_product_sector_field' ],
+            'sap-connection-settings',
             'sap_connection_main_section'
         );
     }
@@ -187,6 +238,43 @@ class Admin {
         );      
     }
 
+    public function render_product_codes_field(): void {
+        $value = get_option( 'product_codes_json_url', '' );
+        ?>
+        <input type="text" name="product_codes_json_url" value="<?php echo esc_attr( $value ); ?>" class="regular-text">
+        <p class="description">Enter the URL for the Product Codes JSON file.</p>
+        <?php
+    }
+
+    public function render_product_images_field(): void {
+        $value = get_option( 'product_images_json_url', '' );
+        ?>
+        <input type="text" name="product_images_json_url" value="<?php echo esc_attr( $value ); ?>" class="regular-text">
+        <p class="description">Enter the URL for the Product Images JSON file.</p>
+        <?php
+    }
+
+    public function render_product_brand_field(): void {
+        $value = get_option( 'product_brand_json_url', '' );
+        ?>
+        <input type="text" name="product_brand_json_url" value="<?php echo esc_attr( $value ); ?>" class="regular-text">
+        <p class="description">Enter the URL for the Product Brand JSON file.</p>
+        <?php
+    }
+    public function render_product_type_field(): void {
+        $value = get_option( 'product_type_json_url', '' );
+        ?>
+        <input type="text" name="product_type_json_url" value="<?php echo esc_attr( $value ); ?>" class="regular-text">
+        <p class="description">Enter the URL for the Product Type JSON file.</p>
+        <?php
+    }
+    public function render_product_sector_field(): void {
+        $value = get_option( 'product_sector_json_url', '' );
+        ?>
+        <input type="text" name="product_sector_json_url" value="<?php echo esc_attr( $value ); ?>" class="regular-text">
+        <p class="description">Enter the URL for the Product Sector JSON file.</p>
+        <?php
+    }
     public function render_full_sync_page(): void {
         // Render the Full Sync page content here.
         if ( ! current_user_can( 'manage_options' ) ) {

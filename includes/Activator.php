@@ -10,6 +10,7 @@ class Activator {
 
     public static function activate(): void {
         ( new Cron\WpCron() )->schedule();
+        self::create_sap_connection_folder(); // Ensure the folder is created during activation
     }
     /**
      * Create folder called "SAP_Connection" in the uploads directory upon plugin activation
