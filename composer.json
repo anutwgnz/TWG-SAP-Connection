@@ -1,0 +1,12 @@
+{
+    "name": "twg/plugin-name",
+    "type": "wordpress-plugin",
+    "autoload": {
+        "psr-4": {
+            "TwgPluginName\\": "includes/"
+        }
+    },
+    "require": {
+        "php": ">=7.4"
+    }
+}
