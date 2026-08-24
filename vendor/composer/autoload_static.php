@@ -7,14 +7,14 @@ namespace Composer\Autoload;
 class ComposerStaticInit2a631c8c2f736d1423f0355f325f821e
 {
     public static $prefixLengthsPsr4 = array (
-        'T' => 
+        'T' =>
         array (
-            'TwgPluginName\\' => 14,
+            'TwgSapConnection\\' => 17,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'TwgPluginName\\' => 
+        'TwgSapConnection\\' =>
         array (
             0 => __DIR__ . '/../..' . '/includes',
         ),

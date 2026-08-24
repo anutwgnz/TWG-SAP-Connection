@@ -1,6 +1,6 @@
 <?php
 
-namespace TwgPluginName\Frontend;
+namespace TwgSapConnection\Frontend;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;

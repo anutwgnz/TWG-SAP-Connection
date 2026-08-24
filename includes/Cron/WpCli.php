@@ -1,13 +1,13 @@
 <?php
 
-namespace TwgPluginName\Cron;
+namespace TwgSapConnection\Cron;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use TwgPluginName\Api;
-use TwgPluginName\Config;
+use TwgSapConnection\Api;
+use TwgSapConnection\Config;
 
 /**
  * WP-CLI commands for real Linux cron jobs.
@@ -40,11 +40,6 @@ class WpCli {
      * @param array $assoc_args Named arguments.
      */
     public function sync( array $args, array $assoc_args ): void {
-        $client = new Api\Client( Config::API_URL );
-        $data   = $client->get( '/items' );
-
-        // Process $data as needed.
-
-        \WP_CLI::success( 'Synced ' . count( $data ) . ' items.' );
+        \WP_CLI::warning( 'WP-CLI sync command is not implemented for this plugin yet.' );
     }
 }

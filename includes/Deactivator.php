@@ -1,6 +1,6 @@
 <?php
 
-namespace TwgPluginName;
+namespace TwgSapConnection;
 
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -9,6 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class Deactivator {
 
     public static function deactivate(): void {
-        ( new Cron\WpCron() )->unschedule();
+        //( new Cron\WpCron() )->unschedule();
     }
 }
