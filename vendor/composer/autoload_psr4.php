@@ -6,5 +6,5 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'TwgPluginName\\' => array($baseDir . '/includes'),
+    'TwgSapConnection\\' => array($baseDir . '/includes'),
 );
