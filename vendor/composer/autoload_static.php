@@ -22,6 +22,25 @@ class ComposerStaticInit2a631c8c2f736d1423f0355f325f821e
 
     public static $classMap = array (
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
+        'TwgSapConnection\\Activator' => __DIR__ . '/../..' . '/includes/Activator.php',
+        'TwgSapConnection\\Admin\\Admin' => __DIR__ . '/../..' . '/includes/Admin/Admin.php',
+        'TwgSapConnection\\Admin\\Common' => __DIR__ . '/../..' . '/includes/Admin/Common.php',
+        'TwgSapConnection\\Admin\\Order' => __DIR__ . '/../..' . '/includes/Admin/Order.php',
+        'TwgSapConnection\\Admin\\Product' => __DIR__ . '/../..' . '/includes/Admin/Product.php',
+        'TwgSapConnection\\Api\\Client' => __DIR__ . '/../..' . '/includes/Api/Client.php',
+        'TwgSapConnection\\Api\\Shipping' => __DIR__ . '/../..' . '/includes/Api/Shipping.php',
+        'TwgSapConnection\\Config' => __DIR__ . '/../..' . '/includes/Config.php',
+        'TwgSapConnection\\Cron\\AuditCliCommand' => __DIR__ . '/../..' . '/includes/Cron/AuditCliCommand.php',
+        'TwgSapConnection\\Cron\\ScheduleCliCommand' => __DIR__ . '/../..' . '/includes/Cron/ScheduleCliCommand.php',
+        'TwgSapConnection\\Cron\\WpCli' => __DIR__ . '/../..' . '/includes/Cron/WpCli.php',
+        'TwgSapConnection\\Cron\\WpCron' => __DIR__ . '/../..' . '/includes/Cron/WpCron.php',
+        'TwgSapConnection\\Deactivator' => __DIR__ . '/../..' . '/includes/Deactivator.php',
+        'TwgSapConnection\\Frontend\\Frontend' => __DIR__ . '/../..' . '/includes/Frontend/Frontend.php',
+        'TwgSapConnection\\Jobs\\DryRunDownload' => __DIR__ . '/../..' . '/includes/Jobs/DryRunDownload.php',
+        'TwgSapConnection\\Jobs\\ScheduledDownload' => __DIR__ . '/../..' . '/includes/Jobs/ScheduledDownload.php',
+        'TwgSapConnection\\Jobs\\ScheduledSync' => __DIR__ . '/../..' . '/includes/Jobs/ScheduledSync.php',
+        'TwgSapConnection\\Jobs\\SchedulerSupport' => __DIR__ . '/../..' . '/includes/Jobs/SchedulerSupport.php',
+        'TwgSapConnection\\Plugin' => __DIR__ . '/../..' . '/includes/Plugin.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
