@@ -30,6 +30,10 @@ class Plugin {
         if ( $this->is_woocommerce_active() ) {
             //( new WooCommerce\Loader() )->register();
             new \WooCommerce();
+            ( new Jobs\DryRunDownload() )->register();
+            ( new Jobs\ScheduledDownload() )->register();
+            ( new Jobs\ScheduledSync() )->register();
+            add_action( 'init', [ Jobs\SchedulerSupport::class, 'ensure_scheduled' ], 20 );
         }
     }
 

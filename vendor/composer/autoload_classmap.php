@@ -7,4 +7,23 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Composer\\InstalledVersions' => $vendorDir . '/composer/InstalledVersions.php',
+    'TwgSapConnection\\Activator' => $baseDir . '/includes/Activator.php',
+    'TwgSapConnection\\Admin\\Admin' => $baseDir . '/includes/Admin/Admin.php',
+    'TwgSapConnection\\Admin\\Common' => $baseDir . '/includes/Admin/Common.php',
+    'TwgSapConnection\\Admin\\Order' => $baseDir . '/includes/Admin/Order.php',
+    'TwgSapConnection\\Admin\\Product' => $baseDir . '/includes/Admin/Product.php',
+    'TwgSapConnection\\Api\\Client' => $baseDir . '/includes/Api/Client.php',
+    'TwgSapConnection\\Api\\Shipping' => $baseDir . '/includes/Api/Shipping.php',
+    'TwgSapConnection\\Config' => $baseDir . '/includes/Config.php',
+    'TwgSapConnection\\Cron\\AuditCliCommand' => $baseDir . '/includes/Cron/AuditCliCommand.php',
+    'TwgSapConnection\\Cron\\ScheduleCliCommand' => $baseDir . '/includes/Cron/ScheduleCliCommand.php',
+    'TwgSapConnection\\Cron\\WpCli' => $baseDir . '/includes/Cron/WpCli.php',
+    'TwgSapConnection\\Cron\\WpCron' => $baseDir . '/includes/Cron/WpCron.php',
+    'TwgSapConnection\\Deactivator' => $baseDir . '/includes/Deactivator.php',
+    'TwgSapConnection\\Frontend\\Frontend' => $baseDir . '/includes/Frontend/Frontend.php',
+    'TwgSapConnection\\Jobs\\DryRunDownload' => $baseDir . '/includes/Jobs/DryRunDownload.php',
+    'TwgSapConnection\\Jobs\\ScheduledDownload' => $baseDir . '/includes/Jobs/ScheduledDownload.php',
+    'TwgSapConnection\\Jobs\\ScheduledSync' => $baseDir . '/includes/Jobs/ScheduledSync.php',
+    'TwgSapConnection\\Jobs\\SchedulerSupport' => $baseDir . '/includes/Jobs/SchedulerSupport.php',
+    'TwgSapConnection\\Plugin' => $baseDir . '/includes/Plugin.php',
 );

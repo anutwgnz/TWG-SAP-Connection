@@ -157,13 +157,169 @@ class Common {
     public static function cron_job_function_one_am(){
         Common::add_log('Debug', '1 AM Cron job function started.');
         try {
-            $product = new Product();
-            Common::add_log('Info', 'Product instance created successfully.');
-            $product->sap_sync_products();
+            Common::cron_job_function_scheduled_sync();
             Common::add_log('Info', 'Products synced to DB successfully.');
         } catch (\Exception $e) {
             Common::add_log('Error', '1 AM Cron job failed: ' . $e->getMessage());
         }
         Common::add_log('Debug', '1 AM Cron job function ended.');
+    }
+
+    /**
+     * Production scheduled download: SAP metadata and products to JSON.
+     *
+     * @return array{success: bool, sap_count: int|null, json_count: int, mismatch: bool}
+     */
+    public static function cron_job_function_scheduled_download(): array {
+        Common::add_log( 'Cron-Job', 'Scheduled download started.' );
+
+        $default_result = [
+            'success'    => false,
+            'sap_count'  => null,
+            'json_count' => 0,
+            'mismatch'   => false,
+        ];
+
+        try {
+            Product::fetch_meta_sap();
+            Common::add_log( 'Cron-Job', 'Meta data fetched from SAP successfully.' );
+
+            $fetch_result = Product::fetch_products();
+
+            if ( ! $fetch_result['success'] ) {
+                Common::add_log( 'Cron-Job', 'Scheduled download failed during product fetch.' );
+                return array_merge( $default_result, $fetch_result );
+            }
+
+            Common::add_log(
+                'Cron-Job',
+                sprintf(
+                    'Scheduled download complete. SAP count: %s, JSON count: %d, mismatch: %s',
+                    null === $fetch_result['sap_count'] ? 'unknown' : (string) $fetch_result['sap_count'],
+                    $fetch_result['json_count'],
+                    $fetch_result['mismatch'] ? 'yes' : 'no'
+                )
+            );
+
+            return [
+                'success'    => true,
+                'sap_count'  => $fetch_result['sap_count'],
+                'json_count' => $fetch_result['json_count'],
+                'mismatch'   => $fetch_result['mismatch'],
+            ];
+        } catch ( \Exception $e ) {
+            Common::add_log( 'Cron-Job', 'Scheduled download failed: ' . $e->getMessage() );
+            return $default_result;
+        }
+    }
+
+    /**
+     * Production scheduled sync: JSON → WooCommerce + draft orphans.
+     *
+     * @return array{success: bool, json_count: int, drafted_count: int, message: string}
+     */
+    public static function cron_job_function_scheduled_sync(): array {
+        Common::add_log( 'Cron-Job', 'Scheduled sync started.' );
+
+        $default_result = [
+            'success'       => false,
+            'json_count'    => 0,
+            'drafted_count' => 0,
+            'message'       => 'Scheduled sync failed.',
+        ];
+
+        try {
+            $json_skus = Product::get_json_skus();
+
+            if ( empty( $json_skus ) ) {
+                Common::add_log( 'Cron-Job', 'Scheduled sync skipped: product JSON is empty.' );
+                return array_merge(
+                    $default_result,
+                    [
+                        'message' => 'Scheduled sync skipped: product JSON is empty. Run download first.',
+                    ]
+                );
+            }
+
+            $json_count = count( $json_skus );
+            Common::add_log( 'Cron-Job', 'JSON SKU snapshot count: ' . $json_count );
+
+            Product::sap_sync_products();
+
+            $reconcile = Product::reconcile_products_not_in_json( $json_skus, false );
+
+            Common::add_log(
+                'Cron-Job',
+                sprintf(
+                    'Scheduled sync complete. JSON SKUs: %d, drafted orphans: %d',
+                    $json_count,
+                    $reconcile['count']
+                )
+            );
+
+            return [
+                'success'       => true,
+                'json_count'    => $json_count,
+                'drafted_count' => $reconcile['count'],
+                'message'       => 'Scheduled sync completed successfully.',
+            ];
+        } catch ( \Exception $e ) {
+            Common::add_log( 'Cron-Job', 'Scheduled sync failed: ' . $e->getMessage() );
+            return array_merge(
+                $default_result,
+                [
+                    'message' => 'Scheduled sync failed: ' . $e->getMessage(),
+                ]
+            );
+        }
+    }
+
+    /**
+     * Dry-run SAP download: fetch metadata and products to JSON only (no WooCommerce sync).
+     *
+     * @return array{success: bool, sap_count: int|null, json_count: int, mismatch: bool}
+     */
+    public static function cron_job_function_dry_run_download(): array {
+        Common::add_log( 'Dry-Run', 'Download job started.' );
+
+        $default_result = [
+            'success'    => false,
+            'sap_count'  => null,
+            'json_count' => 0,
+            'mismatch'   => false,
+        ];
+
+        try {
+            Product::fetch_meta_sap();
+            Common::add_log( 'Dry-Run', 'Meta data fetched from SAP successfully.' );
+
+            $fetch_result = Product::fetch_products();
+
+            if ( ! $fetch_result['success'] ) {
+                Common::add_log( 'Dry-Run', 'Products data fetch failed.' );
+                return array_merge( $default_result, $fetch_result );
+            }
+
+            Common::add_log(
+                'Dry-Run',
+                sprintf(
+                    'Products fetched. SAP count: %s, JSON count: %d, mismatch: %s',
+                    null === $fetch_result['sap_count'] ? 'unknown' : (string) $fetch_result['sap_count'],
+                    $fetch_result['json_count'],
+                    $fetch_result['mismatch'] ? 'yes' : 'no'
+                )
+            );
+            Common::add_log( 'Dry-Run', 'Download job completed.' );
+
+            return [
+                'success'    => true,
+                'sap_count'  => $fetch_result['sap_count'],
+                'json_count' => $fetch_result['json_count'],
+                'mismatch'   => $fetch_result['mismatch'],
+            ];
+        } catch ( \Exception $e ) {
+            Common::add_log( 'Dry-Run', 'Download job failed: ' . $e->getMessage() );
+            return $default_result;
+        }
     }
 }

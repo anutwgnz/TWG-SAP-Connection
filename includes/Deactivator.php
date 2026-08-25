@@ -6,9 +6,11 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+use TwgSapConnection\Jobs\SchedulerSupport;
+
 class Deactivator {
 
     public static function deactivate(): void {
-        //( new Cron\WpCron() )->unschedule();
+        SchedulerSupport::unschedule_all();
     }
 }
