@@ -6,15 +6,15 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-use TwgSapConnection\Api;
 use TwgSapConnection\Config;
-use TwgSapConnection\Admin\Product;
 use TwgSapConnection\Admin\Common;
+use TwgSapConnection\Jobs\SchedulerSupport;
+
 /**
- * WP-Cron scheduled tasks.
+ * Legacy WP-Cron callbacks.
  *
- * WordPress cron is "pseudo-cron" - it runs on page load, not real server time.
- * For time-critical tasks, use WpCli.php with a real Linux cron instead.
+ * Production scheduling uses Action Scheduler (midnight download, 1 AM sync).
+ * Legacy hooks remain registered for backward compatibility if old events still exist.
  */
 class WpCron {
 
@@ -31,59 +31,40 @@ class WpCron {
     }
 
     /**
-     * Schedule the cron event. Called once on plugin activation.
+     * Legacy schedule method — production jobs use Action Scheduler.
      */
     public function schedule(): void {
-        if ( ! wp_next_scheduled( self::HOOK ) ) {
-            wp_schedule_event( strtotime('midnight'), 'daily', self::HOOK );
-        }
+        SchedulerSupport::clear_legacy_wp_cron();
     }
 
     /**
-     * Remove the cron event. Called on plugin deactivation.
+     * Remove legacy WP-Cron events.
      */
     public function unschedule(): void {
-        wp_clear_scheduled_hook( self::HOOK );
+        SchedulerSupport::clear_legacy_wp_cron();
     }
 
     /**
-     * The actual task that runs on schedule.
+     * Legacy midnight download hook (delegates to scheduled download orchestrator).
      */
     public function run(): void {
-        //Common::add_log( 'Cron-Job','TWG SAP Connection cron job executed at ' . date( 'Y-m-d H:i:s' ) );
-        
-        //Common::add_log( 'Cron-Job','TWG SAP Connection cron job Meta to JSON executed at ' . date( 'Y-m-d H:i:s' ) );
-        Product::fetch_meta_sap();
-        
-        //Common::add_log( 'Cron-Job','TWG SAP Connection cron job Products to JSON executed at ' . date( 'Y-m-d H:i:s' ) );
-        Product::fetch_products();
-        
+        Common::add_log( 'Cron-Job', 'Legacy WP-Cron download hook fired. Use Action Scheduler nightly download instead.' );
+        Common::cron_job_function_scheduled_download();
     }
-    
-    
+
     public function run_eleven_pm(): void {
         Common::cron_job_function();
     }
 
     public function schedule_one_am(): void {
-
-        $hook_one_am = self::HOOK . '_one_am';
-    
-        if ( ! wp_next_scheduled( $hook_one_am ) ) {
-            wp_schedule_event( strtotime('tomorrow 1am'), 'daily', $hook_one_am );
-        }
-        add_action( $hook_one_am, [ $this, 'run_one_am' ] );
+        // Legacy — sync is scheduled via Action Scheduler at 1 AM.
     }
-    
+
+    /**
+     * Legacy 1 AM sync hook (delegates to scheduled sync orchestrator).
+     */
     public function run_one_am(): void {
-        // Common::add_log(
-        //     'Cron-Job',
-        //     'TWG SAP Connection 1 AM cron job executed at ' . date('Y-m-d H:i:s')
-       //);
-    
-        //Common::cron_job_function();
-        //Common::add_log( 'Cron-Job','TWG SAP Connection cron job Products JSON to DB executed at ' . date( 'Y-m-d H:i:s' ) );
-        Product::sap_sync_products();
-        //Product::fetch_products();
+        Common::add_log( 'Cron-Job', 'Legacy WP-Cron sync hook fired. Use Action Scheduler nightly sync instead.' );
+        Common::cron_job_function_scheduled_sync();
     }
 }
